@@ -1,5 +1,6 @@
 const {connectDB} =require('./db/db.connect');
 const {Student} = require('./models/students.model')
+const {Teacher}=require('./models/teachers.model')
 const cors = require('cors')
 const express=require('express');
 const app=express();
@@ -72,5 +73,44 @@ app.delete("/students/:id",async(req,resp)=>{
     }
     catch(error){
         resp.status(500).json({error:"Error occur"})
+    }
+})
+
+app.get('/teachers',async(req,resp)=>{
+    try{
+        const students=await Teacher.find();
+        resp.json(students);
+    }
+    catch(error){
+        resp.status(500).json({error:"Error occur"})
+    }
+})
+
+app.post("/teachers",async(req,resp)=>{
+    try{
+        const teacher=await Teacher(req.body);
+        teacher.save();
+        resp.json(teacher);
+    }
+    catch(error){
+        resp.status(500).json({error:'Error occur while post data'})
+    }
+})
+app.post("/teachers/:id",async(req,resp)=>{
+    try{
+        const teacher=await Teacher.findByIdAndUpdate(req.params.id,req.body);
+        resp.json(teacher);
+    }
+    catch(error){
+
+    }
+})
+app.delete("/teachers/:id",async(req,resp)=>{
+    try{
+        const teacher=await Teacher.findByIdAndDelete(req.params.id);
+        resp.json(teacher);
+    }
+    catch(error){
+        resp.status(500).json({error:'Error occur'})
     }
 })
